@@ -5,7 +5,7 @@ const axios = require("axios");
 const WEATHER = require("../models/Weather");
 
 // Configuring the path to read the environment variable file, .env, to get the weather api key
-require('dotenv').config({path: "./../../../.env"});
+require('dotenv').config();
 
 const baseUrl = "http://api.openweathermap.org/data/2.5/weather";
 
@@ -20,7 +20,7 @@ class Weather {
      */
     getWeatherData = async (zipCode, tempMetric) => {
 
-        let url = `${baseUrl}?zip=${zipCode},us&appid=${process.env.WEATHER_KEY}&units=${tempMetric}`;
+        let url = `${baseUrl}?zip=${zipCode},us&appid=${process.env.WEATHER_API_KEY}&units=${tempMetric}`;
 
         // Awaitable call to get the information from the weather api and then return the data.
         // TODO: Add error handling for this call

@@ -10,7 +10,7 @@ const RequestManager = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/requests/owner/${user.email}`);
+        const response = await fetch(`http://localhost:5002/api/requests/owner/${user.email}`);
         if (!response.ok) {
           throw new Error('Failed to fetch requests');
         }
@@ -28,7 +28,7 @@ const RequestManager = () => {
 
   const handleUpdate = async (requestId, status) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/requests/update/${requestId}`, {
+      const response = await fetch(`http://localhost:5002/api/requests/update/${requestId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),

@@ -2,14 +2,31 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
+const { validationResult } = require('express-validator');
 exports.signup = async (req, res) => {
-    const { username, password, email, notificationFrequency, preferredUnits } = req.body;
+    // Handle express-validator errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ message: 'Validation failed', errors: errors.array() });
+    }
 
-    console.log("Incoming request data:", req.body);
+    const { username, password, email, notificationFrequency, preferredUnits } = req.body;
 
     try {
         if (!username || !password || !email) {
             return res.status(400).json({ message: 'Username, email, and password are required.' });
+        }
+
+        // Check for existing user with same email
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(409).json({ message: 'Email already registered.' });
+        }
+
+        // Optional: Check for existing username
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(409).json({ message: 'Username already taken.' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -20,13 +37,11 @@ exports.signup = async (req, res) => {
             preferences: { notificationFrequency, preferredUnits }
         });
 
-        console.log("Registering user...");
-
-        await newUser.save(); // Save the user to the database
+        await newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error('Signup failed:', error);
-        res.status(500).json({ message: 'Signup failed' });
+        res.status(500).json({ message: 'Signup failed', error: error.message });
     }
 };
 
@@ -60,6 +75,28 @@ exports.getUserData = async (req, res) => {
         });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching user data' });
+    }
+};
+
+// PUT update user preferences
+exports.updateUserPreferences = async (req, res) => {
+    const { notificationFrequency, preferredUnits } = req.body;
+
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                preferences: { notificationFrequency, preferredUnits },
+            },
+            { new: true } // Return the updated document
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'Preferences updated successfully', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating preferences' });
     }
 };
 

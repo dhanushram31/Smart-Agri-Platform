@@ -6,7 +6,7 @@ form {
   border: 1px solid #444; /* Darker border for better contrast */
   border-radius: 10px; /* Slightly more rounded corners */
   max-width: 400px;
-  background-color: #1a1a1a;
+  background-color: #f9f9f9;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* More pronounced shadow for depth */
   color: white;
 }
@@ -16,8 +16,8 @@ input, select, button {
   width: 100%;
   padding: 12px;
   margin: 15px 0;
-  background-color: #333;
-  color: white;
+  background-color: #f1f1f1;
+  color: #333;
   border: 1px solid #555; /* Softer border */
   border-radius: 5px;
   box-sizing: border-box;
@@ -43,7 +43,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #1B5E20;
   transform: translateY(-2px); /* Slight lift on hover */
 }
 

@@ -10,7 +10,7 @@ const SeedList = () => {
   const [seeds, setSeeds] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/seeds/all')
+    fetch('http://localhost:5002/api/seeds/all')
       .then((res) => res.json())
       .then((data) => setSeeds(data))
       .catch((error) => console.error('Error fetching seeds:', error));
@@ -25,7 +25,7 @@ const SeedList = () => {
     try {
 
       console.log(user_email+"  "+user_id+"  "+seed._id);
-      const response = await fetch('http://localhost:3000/api/requests/request', {
+      const response = await fetch('http://localhost:5002/api/requests/request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

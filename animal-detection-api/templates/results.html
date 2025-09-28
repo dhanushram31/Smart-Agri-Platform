@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Results - Animal Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'farm-green': '#22c55e',
+                        'farm-brown': '#a3a3a3',
+                        'alert-red': '#ef4444',
+                        'alert-orange': '#f97316',
+                        'alert-yellow': '#eab308'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen">
+    
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg border-b-4 border-farm-green">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-gray-900">📊 Results & Analytics</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-farm-green px-3 py-2 rounded-md text-sm font-medium transition">Home</a>
+                    <a href="/upload" class="text-gray-700 hover:text-farm-green px-3 py-2 rounded-md text-sm font-medium transition">Upload</a>
+                    <a href="/live" class="text-gray-700 hover:text-farm-green px-3 py-2 rounded-md text-sm font-medium transition">Live Stream</a>
+                    <a href="/results" class="bg-farm-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">Results</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">📊 Detection Results & Analytics</h1>
+            <p class="text-lg text-gray-600">Comprehensive analysis of animal detection activities on your farm</p>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">📈 Overview Statistics</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="summaryStats">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            
+            <!-- Animal Distribution Chart -->
+            <div class="bg-white rounded-lg shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">🐾 Animal Distribution</h2>
+                <div class="relative h-64">
+                    <canvas id="animalChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Priority Level Chart -->
+            <div class="bg-white rounded-lg shadow-xl p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">⚠️ Priority Levels</h2>
+                <div class="relative h-64">
+                    <canvas id="priorityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detection Records -->
+        <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4 sm:mb-0">📹 Recent Detection Records</h2>
+                <div class="flex gap-2">
+                    <select id="filterPriority" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-farm-green focus:border-farm-green">
+                        <option value="">All Priorities</option>
+                        <option value="CRITICAL">Critical</option>
+                        <option value="HIGH">High</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="LOW">Low</option>
+                    </select>
+                    <select id="filterAnimal" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-farm-green focus:border-farm-green">
+                        <option value="">All Animals</option>
+                        <!-- Will be populated by JavaScript -->
+                    </select>
+                    <button id="refreshBtn" class="bg-farm-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                        🔄 Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Records Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Video</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Animals</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Processing</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="bg-white rounded-lg shadow-xl p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">📤 Export & Reports</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button id="exportCSV" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+                    📊 Export CSV Report
+                </button>
+                <button id="exportJSON" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition">
+                    📋 Export JSON Data
+                </button>
+                <button id="generateReport" class="bg-farm-green text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition">
+                    📄 Generate PDF Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Video Details -->
+    <div id="videoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-900" id="modalTitle">Video Details</h3>
+                <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        let allRecords = [];
+        let filteredRecords = [];
+        let animalChart = null;
+        let priorityChart = null;
+
+        // DOM Elements
+        const filterPriority = document.getElementById('filterPriority');
+        const filterAnimal = document.getElementById('filterAnimal');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const recordsTableBody = document.getElementById('recordsTableBody');
+        const videoModal = document.getElementById('videoModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', loadData);
+        filterPriority.addEventListener('change', applyFilters);
+        filterAnimal.addEventListener('change', applyFilters);
+        refreshBtn.addEventListener('click', loadData);
+        closeModal.addEventListener('click', () => videoModal.classList.add('hidden'));
+        document.getElementById('exportCSV').addEventListener('click', exportCSV);
+        document.getElementById('exportJSON').addEventListener('click', exportJSON);
+        document.getElementById('generateReport').addEventListener('click', generateReport);
+
+        async function loadData() {
+            try {
+                // Show loading state
+                refreshBtn.textContent = '🔄 Loading...';
+                refreshBtn.disabled = true;
+
+                // Load detection statistics
+                const statsResponse = await fetch('/api/detection_statistics');
+                const statsData = await statsResponse.json();
+                
+                // Update summary statistics
+                updateSummaryStats(statsData);
+                
+                // Update charts
+                updateCharts(statsData);
+                
+                // Load records (simulate with sample data for demo)
+                allRecords = generateSampleRecords();
+                filteredRecords = [...allRecords];
+                
+                // Update animal filter options
+                updateAnimalFilter();
+                
+                // Update records table
+                updateRecordsTable();
+                
+                refreshBtn.textContent = '🔄 Refresh';
+                refreshBtn.disabled = false;
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                refreshBtn.textContent = '❌ Error';
+                setTimeout(() => {
+                    refreshBtn.textContent = '🔄 Refresh';
+                    refreshBtn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        function updateSummaryStats(data) {
+            const container = document.getElementById('summaryStats');
+            
+            const totalVideos = data.total_videos || 0;
+            const totalDetections = data.total_detections || 0;
+            const uniqueAnimals = Object.keys(data.animal_counts || {}).length;
+            const avgDetectionsPerVideo = totalVideos > 0 ? Math.round(totalDetections / totalVideos) : 0;
+            
+            container.innerHTML = `
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white text-center">
+                    <div class="text-3xl font-bold">${totalVideos}</div>
+                    <div class="text-sm opacity-90">Videos Processed</div>
+                </div>
+                <div class="bg-gradient-to-r from-farm-green to-green-600 rounded-lg p-6 text-white text-center">
+                    <div class="text-3xl font-bold">${totalDetections}</div>
+                    <div class="text-sm opacity-90">Total Detections</div>
+                </div>
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white text-center">
+                    <div class="text-3xl font-bold">${uniqueAnimals}</div>
+                    <div class="text-sm opacity-90">Species Found</div>
+                </div>
+                <div class="bg-gradient-to-r from-alert-orange to-orange-600 rounded-lg p-6 text-white text-center">
+                    <div class="text-3xl font-bold">${avgDetectionsPerVideo}</div>
+                    <div class="text-sm opacity-90">Avg per Video</div>
+                </div>
+            `;
+        }
+
+        function updateCharts(data) {
+            const animalCounts = data.animal_counts || {};
+            const animals = Object.keys(animalCounts);
+            const counts = Object.values(animalCounts);
+            
+            // Colors for charts
+            const colors = [
+                '#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EF4444',
+                '#06B6D4', '#84CC16', '#F97316', '#EC4899', '#6366F1'
+            ];
+            
+            // Animal Distribution Chart
+            const animalCtx = document.getElementById('animalChart').getContext('2d');
+            if (animalChart) animalChart.destroy();
+            
+            animalChart = new Chart(animalCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: animals.map(a => a.replace('_', ' ').toUpperCase()),
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: colors.slice(0, animals.length),
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Priority Level Chart (simulate data)
+            const priorityData = {
+                'CRITICAL': Math.floor(Math.random() * 5) + 1,
+                'HIGH': Math.floor(Math.random() * 10) + 5,
+                'MEDIUM': Math.floor(Math.random() * 15) + 10,
+                'LOW': Math.floor(Math.random() * 20) + 15
+            };
+            
+            const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+            if (priorityChart) priorityChart.destroy();
+            
+            priorityChart = new Chart(priorityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Critical', 'High', 'Medium', 'Low'],
+                    datasets: [{
+                        label: 'Detection Count',
+                        data: Object.values(priorityData),
+                        backgroundColor: ['#EF4444', '#F97316', '#EAB308', '#10B981'],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateSampleRecords() {
+            const animals = ['cow', 'goat', 'sheep', 'dog', 'cat', 'monkey', 'deer', 'elephant', 'wild_boar'];
+            const priorities = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
+            const records = [];
+            
+            for (let i = 0; i < 20; i++) {
+                const animalCount = Math.floor(Math.random() * 3) + 1;
+                const detectedAnimals = [];
+                
+                for (let j = 0; j < animalCount; j++) {
+                    detectedAnimals.push(animals[Math.floor(Math.random() * animals.length)]);
+                }
+                
+                const record = {
+                    id: `record_${i + 1}`,
+                    filename: `farm_video_${String(i + 1).padStart(3, '0')}.mp4`,
+                    timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    detections: detectedAnimals.map(animal => ({
+                        animal: animal,
+                        confidence: 0.6 + Math.random() * 0.4,
+                        priority: priorities[Math.floor(Math.random() * priorities.length)]
+                    })),
+                    processing_time: 15 + Math.random() * 120,
+                    animal_count: animalCount
+                };
+                
+                records.push(record);
+            }
+            
+            return records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+
+        function updateAnimalFilter() {
+            const allAnimals = [...new Set(allRecords.flatMap(r => r.detections.map(d => d.animal)))];
+            
+            filterAnimal.innerHTML = '<option value="">All Animals</option>' + 
+                allAnimals.map(animal => 
+                    `<option value="${animal}">${animal.replace('_', ' ').toUpperCase()}</option>`
+                ).join('');
+        }
+
+        function applyFilters() {
+            const priorityFilter = filterPriority.value;
+            const animalFilter = filterAnimal.value;
+            
+            filteredRecords = allRecords.filter(record => {
+                // Priority filter
+                if (priorityFilter) {
+                    const hasPriority = record.detections.some(d => d.priority === priorityFilter);
+                    if (!hasPriority) return false;
+                }
+                
+                // Animal filter
+                if (animalFilter) {
+                    const hasAnimal = record.detections.some(d => d.animal === animalFilter);
+                    if (!hasAnimal) return false;
+                }
+                
+                return true;
+            });
+            
+            updateRecordsTable();
+        }
+
+        function updateRecordsTable() {
+            const animalEmojis = {
+                'elephant': '🐘', 'cow': '🐄', 'buffalo': '🐃', 'goat': '🐐',
+                'sheep': '🐑', 'pig': '🐷', 'dog': '🐕', 'cat': '🐱',
+                'monkey': '🐒', 'deer': '🦌', 'wild_boar': '🐗', 'nilgai': '🦌',
+                'peacock': '🦚', 'bird': '🐦', 'bear': '🐻', 'horse': '🐎'
+            };
+            
+            const priorityColors = {
+                'CRITICAL': 'bg-red-100 text-red-800',
+                'HIGH': 'bg-orange-100 text-orange-800',
+                'MEDIUM': 'bg-yellow-100 text-yellow-800',
+                'LOW': 'bg-green-100 text-green-800'
+            };
+            
+            if (filteredRecords.length === 0) {
+                recordsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <div class="text-4xl mb-2">🔍</div>
+                            <p>No records found matching your filters</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            recordsTableBody.innerHTML = filteredRecords.map(record => {
+                const timestamp = new Date(record.timestamp);
+                const highestPriority = record.detections.reduce((highest, d) => 
+                    ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].indexOf(d.priority) > 
+                    ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].indexOf(highest) ? d.priority : highest, 'LOW');
+                
+                const animalList = [...new Set(record.detections.map(d => d.animal))];
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="text-sm font-medium text-gray-900">${record.filename}</div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-wrap gap-1">
+                                ${animalList.map(animal => `
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        ${animalEmojis[animal] || '🐾'} ${animal.replace('_', ' ')}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${priorityColors[highestPriority]}">
+                                ${highestPriority}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            <div>${timestamp.toLocaleDateString()}</div>
+                            <div class="text-xs text-gray-500">${timestamp.toLocaleTimeString()}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${Math.round(record.processing_time)}s
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button class="text-farm-green hover:text-green-700 mr-3" onclick="viewDetails('${record.id}')">
+                                👁️ View
+                            </button>
+                            <button class="text-blue-600 hover:text-blue-700" onclick="downloadVideo('${record.filename}')">
+                                📥 Download
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function viewDetails(recordId) {
+            const record = allRecords.find(r => r.id === recordId);
+            if (!record) return;
+            
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalTitle.textContent = `Details: ${record.filename}`;
+            
+            const animalEmojis = {
+                'elephant': '🐘', 'cow': '🐄', 'buffalo': '🐃', 'goat': '🐐',
+                'sheep': '🐑', 'pig': '🐷', 'dog': '🐕', 'cat': '🐱',
+                'monkey': '🐒', 'deer': '🦌', 'wild_boar': '🐗', 'nilgai': '🦌',
+                'peacock': '🦚', 'bird': '🐦', 'bear': '🐻', 'horse': '🐎'
+            };
+            
+            modalContent.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Video Info -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-2">📹 Video Information</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><strong>Filename:</strong> ${record.filename}</div>
+                            <div><strong>Processing Time:</strong> ${Math.round(record.processing_time)}s</div>
+                            <div><strong>Processed:</strong> ${new Date(record.timestamp).toLocaleString()}</div>
+                            <div><strong>Total Detections:</strong> ${record.detections.length}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detections -->
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-3">🐾 Detected Animals</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${record.detections.map((detection, index) => `
+                                <div class="border border-gray-200 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center">
+                                            <span class="text-2xl mr-2">${animalEmojis[detection.animal] || '🐾'}</span>
+                                            <span class="font-medium">${detection.animal.replace('_', ' ').toUpperCase()}</span>
+                                        </div>
+                                        <span class="text-xs px-2 py-1 rounded-full ${
+                                            detection.priority === 'CRITICAL' ? 'bg-red-100 text-red-800' :
+                                            detection.priority === 'HIGH' ? 'bg-orange-100 text-orange-800' :
+                                            detection.priority === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
+                                            'bg-green-100 text-green-800'
+                                        }">${detection.priority}</span>
+                                    </div>
+                                    <div class="text-sm text-gray-600">
+                                        Confidence: ${Math.round(detection.confidence * 100)}%
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex justify-center gap-3 pt-4 border-t">
+                        <button class="bg-farm-green text-white px-4 py-2 rounded-lg hover:bg-green-600 transition" 
+                                onclick="downloadVideo('${record.filename}')">
+                            📥 Download Video
+                        </button>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" 
+                                onclick="shareRecord('${record.id}')">
+                            📤 Share Results
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            videoModal.classList.remove('hidden');
+        }
+
+        function downloadVideo(filename) {
+            // Simulate video download
+            alert(`Downloading ${filename}...`);
+        }
+
+        function shareRecord(recordId) {
+            // Simulate sharing functionality
+            const record = allRecords.find(r => r.id === recordId);
+            if (record) {
+                const shareText = `Farm Animal Detection Results:\n${record.filename}\nAnimals detected: ${record.detections.length}\nProcessed: ${new Date(record.timestamp).toLocaleString()}`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Animal Detection Results',
+                        text: shareText
+                    });
+                } else {
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        alert('Results copied to clipboard!');
+                    });
+                }
+            }
+        }
+
+        function exportCSV() {
+            const csvData = [
+                ['Filename', 'Animals', 'Priority', 'Timestamp', 'Processing Time (s)', 'Detection Count']
+            ];
+            
+            filteredRecords.forEach(record => {
+                const animals = [...new Set(record.detections.map(d => d.animal))].join('; ');
+                const highestPriority = record.detections.reduce((highest, d) => 
+                    ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].indexOf(d.priority) > 
+                    ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].indexOf(highest) ? d.priority : highest, 'LOW');
+                
+                csvData.push([
+                    record.filename,
+                    animals,
+                    highestPriority,
+                    record.timestamp,
+                    Math.round(record.processing_time),
+                    record.detections.length
+                ]);
+            });
+            
+            const csvContent = csvData.map(row => row.join(',')).join('\n');
+            downloadFile(csvContent, 'animal_detection_results.csv', 'text/csv');
+        }
+
+        function exportJSON() {
+            const jsonData = JSON.stringify(filteredRecords, null, 2);
+            downloadFile(jsonData, 'animal_detection_results.json', 'application/json');
+        }
+
+        function generateReport() {
+            alert('PDF report generation would be implemented here using a library like jsPDF');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Close modal when clicking outside
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                videoModal.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

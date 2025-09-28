@@ -1,5 +1,6 @@
 const express = require('express');
 const multer = require('multer');
+const path = require('path');
 const Seed = require('../models/Seed');
 
 const router = express.Router();
@@ -7,7 +8,7 @@ const router = express.Router();
 // Setup storage for multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, path.join(__dirname, '../../uploads/'));
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
@@ -18,21 +19,37 @@ const upload = multer({ storage });
 
 // Route to register seeds
 router.post('/register', upload.single('image'), async (req, res) => {
-    const { seedName, seedType, description, createdBy, createdByEmail } = req.body; // Destructure createdBy and createdByEmail
-    const image = req.file ? req.file.path : ''; // Get image path
+    const { seedName, seedType, description, createdBy, createdByEmail } = req.body;
+    const image = req.file ? req.file.path : '';
 
     try {
         console.log('Request body:', req.body);
         console.log('Uploaded file:', req.file);
 
-        // Create a new seed instance with createdBy and createdByEmail fields
+        // Validate required fields
+        if (!seedName || !seedType || !createdBy || !createdByEmail) {
+            return res.status(400).json({ 
+                error: 'Missing required fields', 
+                details: 'seedName, seedType, createdBy, and createdByEmail are required' 
+            });
+        }
+
+        // Validate ObjectId format
+        if (!createdBy.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({ 
+                error: 'Invalid user ID format', 
+                details: 'Please log in again to get a valid user ID' 
+            });
+        }
+
+        // Create a new seed instance
         const newSeed = new Seed({
             seedName,
             seedType,
             image,
             description,
-            createdBy, // Add createdBy field (should be the user's ObjectId)
-            createdByEmail, // Add createdByEmail field
+            createdBy,
+            createdByEmail,
         });
 
         await newSeed.save();
@@ -40,7 +57,18 @@ router.post('/register', upload.single('image'), async (req, res) => {
         res.status(201).json({ message: 'Seed registered successfully', seed: newSeed });
     } catch (error) {
         console.error('Error registering seed:', error);
-        res.status(500).json({ error: 'Failed to register seed' });
+        
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ 
+                error: 'Validation error', 
+                details: error.message 
+            });
+        }
+        
+        res.status(500).json({ 
+            error: 'Failed to register seed', 
+            details: 'Internal server error' 
+        });
     }
 });
 

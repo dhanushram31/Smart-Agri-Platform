@@ -6,13 +6,21 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.11.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.540.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.26.2",
+    "react-scripts": "^5.0.1",
+    "recharts": "^3.1.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set PORT=5000 && react-scripts start",
+    "start": "PORT=3001 WDS_SOCKET_PORT=0 react-scripts start",
+    "start-no-ws": "PORT=3001 CHOKIDAR_USEPOLLING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -23,6 +31,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://localhost:5001",
   "browserslist": {
     "production": [
       ">0.2%",

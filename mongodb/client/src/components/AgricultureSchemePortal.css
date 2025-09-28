@@ -1,0 +1,344 @@
+/* Agriculture Scheme Portal Styles */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Custom Neumorphism Styles */
+.scheme-card {
+  background: #ffffff;
+  box-shadow: 
+    20px 20px 60px #d1d5db,
+    -20px -20px 60px #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scheme-card:hover {
+  box-shadow: 
+    25px 25px 70px #d1d5db,
+    -25px -25px 70px #ffffff;
+  transform: translateY(-2px);
+}
+
+.dark .scheme-card {
+  background: #1f2937;
+  box-shadow: 
+    20px 20px 60px #111827,
+    -20px -20px 60px #374151;
+}
+
+.dark .scheme-card:hover {
+  box-shadow: 
+    25px 25px 70px #111827,
+    -25px -25px 70px #374151;
+}
+
+/* Neumorphism Buttons */
+.neomorphism-btn {
+  background: #f9fafb;
+  box-shadow: 
+    8px 8px 16px #d1d5db,
+    -8px -8px 16px #ffffff;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.neomorphism-btn:hover {
+  box-shadow: 
+    4px 4px 8px #d1d5db,
+    -4px -4px 8px #ffffff;
+  transform: translateY(1px);
+}
+
+.neomorphism-btn:active {
+  box-shadow: 
+    inset 8px 8px 16px #d1d5db,
+    inset -8px -8px 16px #ffffff;
+}
+
+.dark .neomorphism-btn {
+  background: #374151;
+  box-shadow: 
+    8px 8px 16px #1f2937,
+    -8px -8px 16px #4b5563;
+}
+
+.dark .neomorphism-btn:hover {
+  box-shadow: 
+    4px 4px 8px #1f2937,
+    -4px -4px 8px #4b5563;
+}
+
+.dark .neomorphism-btn:active {
+  box-shadow: 
+    inset 8px 8px 16px #1f2937,
+    inset -8px -8px 16px #4b5563;
+}
+
+/* Custom Input Styles */
+.neomorphism-input {
+  background: #f9fafb;
+  box-shadow: 
+    inset 8px 8px 16px #d1d5db,
+    inset -8px -8px 16px #ffffff;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.neomorphism-input:focus {
+  outline: none;
+  box-shadow: 
+    inset 8px 8px 16px #d1d5db,
+    inset -8px -8px 16px #ffffff,
+    0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.dark .neomorphism-input {
+  background: #374151;
+  color: #f9fafb;
+  box-shadow: 
+    inset 8px 8px 16px #1f2937,
+    inset -8px -8px 16px #4b5563;
+}
+
+.dark .neomorphism-input:focus {
+  box-shadow: 
+    inset 8px 8px 16px #1f2937,
+    inset -8px -8px 16px #4b5563,
+    0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #059669, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pulse Animation for Loading */
+.pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Glow Effects */
+.glow-green {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.3);
+}
+
+/* Chart Container Styling */
+.chart-container {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 
+    20px 20px 60px #d1d5db,
+    -20px -20px 60px #ffffff;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.dark .chart-container {
+  background: #1f2937;
+  box-shadow: 
+    20px 20px 60px #111827,
+    -20px -20px 60px #374151;
+}
+
+/* Table Styling */
+.neomorphism-table {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 
+    20px 20px 60px #d1d5db,
+    -20px -20px 60px #ffffff;
+  overflow: hidden;
+}
+
+.dark .neomorphism-table {
+  background: #1f2937;
+  box-shadow: 
+    20px 20px 60px #111827,
+    -20px -20px 60px #374151;
+}
+
+/* Progress Bar */
+.progress-bar {
+  background: linear-gradient(90deg, #059669, #10b981);
+  border-radius: 9999px;
+  height: 8px;
+  transition: width 0.3s ease;
+}
+
+/* Tooltip Styling */
+.custom-tooltip {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .custom-tooltip {
+  background: rgba(31, 41, 55, 0.95);
+  border: 1px solid rgba(75, 85, 99, 0.2);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .scheme-card {
+    box-shadow: 
+      10px 10px 30px #d1d5db,
+      -10px -10px 30px #ffffff;
+  }
+  
+  .scheme-card:hover {
+    box-shadow: 
+      12px 12px 35px #d1d5db,
+      -12px -12px 35px #ffffff;
+  }
+  
+  .dark .scheme-card {
+    box-shadow: 
+      10px 10px 30px #111827,
+      -10px -10px 30px #374151;
+  }
+  
+  .dark .scheme-card:hover {
+    box-shadow: 
+      12px 12px 35px #111827,
+      -12px -12px 35px #374151;
+  }
+}
+
+/* Utility Classes */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+}
+
+/* Focus Styles for Accessibility */
+.focus-ring:focus {
+  outline: 2px solid #059669;
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .scheme-card {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+    break-inside: avoid;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .scheme-card {
+    border: 2px solid #000000;
+    box-shadow: none;
+  }
+  
+  .dark .scheme-card {
+    border: 2px solid #ffffff;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

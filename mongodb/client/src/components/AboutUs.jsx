@@ -1,61 +1,96 @@
-import React from 'react';
-import './AboutUs.css';
+import "./AboutUs.css"
 
 const AboutUs = () => {
-    return (
-        <>
-        <br/>
-        <br/>
-        <br/>
-        <div className="about-container">
-            <h1>About Us</h1>
-            <p className="intro-text">
-                Welcome to the Climate-Smart Agriculture Platform, where we leverage technology to empower farmers with the information they need to sustainably manage their crops. Our mission is to promote sustainable agricultural practices that adapt to the ever-changing climate, ensuring food security and farmer welfare.
-            </p>
+  return (
+    <div className="about-container">
+      <header className="about-header">
+        <h1 className="main-title">About Us</h1>
+        <p className="subtitle">Transforming Agriculture Through Innovation</p>
+      </header>
 
-            <section className="mission-vision">
-                <div className="mission">
-                    <h2>Our Mission</h2>
-                    <p>
-                        To equip farmers with data-driven insights and advanced tools for enhancing productivity, minimizing environmental impacts, and promoting resilience in the face of climate change.
-                    </p>
-                </div>
-                <div className="vision">
-                    <h2>Our Vision</h2>
-                    <p>
-                        We envision a world where agriculture is sustainable, climate-resilient, and resource-efficient. We aim to build a future where every farmer has access to the tools and knowledge they need to thrive in a rapidly changing environment.
-                    </p>
-                </div>
-            </section>
+      <section className="intro-section">
+        <p className="intro-text">
+          Welcome to the Climate-Smart Agriculture Platform, where cutting-edge technology meets sustainable farming. We
+          empower farmers worldwide with data-driven insights and advanced tools to navigate the challenges of modern
+          agriculture while protecting our planet's future.
+        </p>
+      </section>
 
-            <section className="goals">
-                <h2>Our Goals</h2>
-                <ul>
-                    <li>Empower farmers with actionable climate and crop data.</li>
-                    <li>Promote sustainable and eco-friendly farming practices.</li>
-                    <li>Facilitate better decision-making through predictive crop yield models.</li>
-                    <li>Encourage collaboration between farmers, researchers, and policymakers.</li>
-                </ul>
-            </section>
-
-            <section className="achievements">
-                <h2>Our Achievements</h2>
-                <ul>
-                    <li>Successfully implemented crop prediction models for over 1000 farmers.</li>
-                    <li>Partnered with leading agricultural research institutes to improve data accuracy.</li>
-                    <li>Reduced farming costs by 20% for over 500 smallholder farmers using precision agriculture tools.</li>
-                </ul>
-            </section>
-
-            <footer className="about-footer">
-                <p>&copy; {new Date().getFullYear()} Climate-Smart Agriculture. All rights reserved.</p>
-            </footer>
+      <section className="mission-vision-section">
+        <div className="card mission-card">
+          <div className="card-icon">🎯</div>
+          <h2>Our Mission</h2>
+          <p>
+            To revolutionize agriculture by providing farmers with intelligent, data-driven solutions that enhance
+            productivity, minimize environmental impact, and build resilience against climate change challenges.
+          </p>
         </div>
-        <br/>
-        <br/>
-        <br/>
-        </>
-    );
-};
+        <div className="card vision-card">
+          <div className="card-icon">🌱</div>
+          <h2>Our Vision</h2>
+          <p>
+            A world where sustainable agriculture thrives through technology, ensuring food security for all while
+            preserving our environment for future generations. Every farmer equipped with the knowledge and tools to
+            succeed in an evolving climate.
+          </p>
+        </div>
+      </section>
 
-export default AboutUs;
+      <section className="goals-section">
+        <h2 className="section-title">Strategic Goals</h2>
+        <div className="goals-grid">
+          <div className="goal-item">
+            <div className="goal-number">01</div>
+            <h3>Data-Driven Insights</h3>
+            <p>Provide actionable climate and crop intelligence to optimize farming decisions</p>
+          </div>
+          <div className="goal-item">
+            <div className="goal-number">02</div>
+            <h3>Sustainable Practices</h3>
+            <p>Promote eco-friendly farming methods that protect our environment</p>
+          </div>
+          <div className="goal-item">
+            <div className="goal-number">03</div>
+            <h3>Predictive Analytics</h3>
+            <p>Enable better decision-making through advanced crop yield modeling</p>
+          </div>
+          <div className="goal-item">
+            <div className="goal-number">04</div>
+            <h3>Collaborative Network</h3>
+            <p>Foster partnerships between farmers, researchers, and policymakers</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="achievements-section">
+        <h2 className="section-title">Our Impact</h2>
+        <div className="achievements-grid">
+          <div className="achievement-card">
+            <div className="achievement-number">1,000+</div>
+            <h3>Farmers Empowered</h3>
+            <p>Successfully implemented crop prediction models across diverse agricultural communities</p>
+          </div>
+          <div className="achievement-card">
+            <div className="achievement-number">20%</div>
+            <h3>Cost Reduction</h3>
+            <p>Average farming cost reduction achieved through precision agriculture tools</p>
+          </div>
+          <div className="achievement-card">
+            <div className="achievement-number">500+</div>
+            <h3>Smallholder Farmers</h3>
+            <p>Supported with advanced agricultural technology and sustainable practices</p>
+          </div>
+        </div>
+      </section>
+
+      <footer className="about-footer">
+        <div className="footer-content">
+          <p>&copy; {new Date().getFullYear()} Climate-Smart Agriculture Platform. All rights reserved.</p>
+          <p className="footer-tagline">Building a sustainable future, one farm at a time.</p>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default AboutUs

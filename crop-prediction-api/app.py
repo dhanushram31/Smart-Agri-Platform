@@ -1,25 +1,36 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pickle
 import numpy as np
+import os
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
+# Get the directory where this script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Load the saved models and scalers
 try:
-    with open('model.pkl', 'rb') as model_file:
+    with open(os.path.join(script_dir, 'model.pkl'), 'rb') as model_file:
         crop_model = pickle.load(model_file)
-    with open('scaler.pkl', 'rb') as scaler_file:
+    with open(os.path.join(script_dir, 'scaler.pkl'), 'rb') as scaler_file:
         scaler = pickle.load(scaler_file)
-    with open('price_model.pkl', 'rb') as price_model_file:
+    with open(os.path.join(script_dir, 'price_model.pkl'), 'rb') as price_model_file:
         price_model = pickle.load(price_model_file)
-    with open('scaler_price.pkl', 'rb') as scaler_price_file:
+    with open(os.path.join(script_dir, 'scaler_price.pkl'), 'rb') as scaler_price_file:
         scaler_price = pickle.load(scaler_price_file)
-    with open('label_encoder.pkl', 'rb') as label_encoder_file:
+    with open(os.path.join(script_dir, 'label_encoder.pkl'), 'rb') as label_encoder_file:
         label_encoder = pickle.load(label_encoder_file)
 except Exception as e:
     raise RuntimeError(f"Error loading models or scalers: {e}")
 
-@app.route('/predict', methods=['POST'])
+# Health check endpoint
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({'status': 'healthy', 'message': 'Crop prediction API is running'})
+
+@app.route('/api/crops/predict', methods=['POST'])
 def predict():
     try:
         # Get the data from the request
@@ -66,4 +77,4 @@ def predict():
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, port=4000)
+    app.run(debug=True, port=5001)

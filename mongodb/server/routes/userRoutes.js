@@ -17,8 +17,11 @@ router.post('/login', userController.login);
 // Route to get user data
 router.get('/:id', userController.getUserData);
 
+// Route to update user preferences
+router.put('/:id/preferences', userController.updateUserPreferences);
+
 // Route to update user data
-router.put('/:id/preferences', userController.updateUserData);
+router.put('/:id', userController.updateUserData);
 
 // Route to change password
 router.put('/:id/change-password', userController.changePassword);

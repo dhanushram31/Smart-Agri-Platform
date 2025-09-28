@@ -8,7 +8,7 @@ exports.predictCrop = async (req, res) => {
     console.log("Received data:", req.body);
 
     try {
-        const response = await axios.post('http://127.0.0.1:4000/predict', {
+        const response = await axios.post('http://127.0.0.1:5002/predict', {
             N: parseFloat(N),
             P: parseFloat(P),
             K: parseFloat(K),

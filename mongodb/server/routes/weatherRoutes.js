@@ -5,48 +5,59 @@ const router = express.Router();
 const Weather = require("../api/weather");
 
 // GET Request - statically get the weather data from the weather api
-router.get("/weather", async (req, res) => {
-    let weather = new Weather();
+router.get("/", async (req, res) => {
+    try {
+        const { zipCode } = req.query;
+        let weather = new Weather();
 
-    // Fixing the params of zipcode and tempMetric for an example GET request
-    let weatherData = await weather.getWeatherData(98052, "us");
-
-    // Content that will be sent will be a prettified json
-    res.header("Content-Type", 'application/json');
-    res.send(JSON.stringify(weatherData, null, 4));
+        if (zipCode) {
+            // If zipCode is provided, get data from MongoDB
+            let weatherData = await weather.getWeatherDataFromMongo(zipCode);
+            res.header("Content-Type", 'application/json');
+            res.send(JSON.stringify(weatherData, null, 4));
+        } else {
+            // Default example for GET request without parameters
+            let weatherData = await weather.getWeatherData(98052, "us");
+            res.header("Content-Type", 'application/json');
+            res.send(JSON.stringify(weatherData, null, 4));
+        }
+    } catch (error) {
+        console.error('Error in GET weather:', error);
+        res.status(500).json({ error: 'Failed to fetch weather data', details: error.message });
+    }
 });
 
 // POST Request - dynamically get the weather data based on request body
-router.post("/weather", async (req, res) => {
-    const { zipCode, tempMetric } = req.body;
-    let weather = new Weather();
+router.post("/", async (req, res) => {
+    try {
+        const { zipCode, tempMetric } = req.body;
+        console.log(`Fetching weather for zipCode: ${zipCode}, tempMetric: ${tempMetric}`);
+        
+        let weather = new Weather();
+        let weatherData = await weather.getWeatherData(zipCode, tempMetric);
 
-    // The params for zipCode and tempMetric are dynamic
-    let weatherData = await weather.getWeatherData(zipCode, tempMetric);
-
-    res.header("Content-Type", 'application/json');
-    res.send(JSON.stringify(weatherData, null, 4));
+        res.header("Content-Type", 'application/json');
+        res.send(JSON.stringify(weatherData, null, 4));
+    } catch (error) {
+        console.error('Error in POST weather:', error);
+        res.status(500).json({ error: 'Failed to fetch weather data', details: error.message });
+    }
 });
 
 // POST Request - get the weather data from the api, save it to mongo, then return the data back
-router.post("/weatherMongo", async (req, res) => {
-    const { zipCode, tempMetric } = req.body;
-    let weather = new Weather();
-    let weatherData = await weather.getWeatherData(zipCode, tempMetric);
+router.post("/save", async (req, res) => {
+    try {
+        const { zipCode, tempMetric } = req.body;
+        let weather = new Weather();
+        let weatherData = await weather.getWeatherData(zipCode, tempMetric);
 
-    await weather.saveWeatherDataToMongo(zipCode, weatherData);
-    res.header("Content-Type", 'application/json');
-    res.send(JSON.stringify(weatherData, null, 4));
-})
-
-// GET Request - get the weather data saved from Mongo
-router.get("/weather", async (req, res) => {
-    const { zipCode } = req.query;
-    let weather = new Weather();
-
-    let weatherData = await weather.getWeatherDataFromMongo(zipCode);
-    res.header("Content-Type", 'application/json');
-    res.send(JSON.stringify(weatherData, null, 4));
-})
+        await weather.saveWeatherDataToMongo(zipCode, weatherData);
+        res.header("Content-Type", 'application/json');
+        res.send(JSON.stringify(weatherData, null, 4));
+    } catch (error) {
+        console.error('Error in POST weather/save:', error);
+        res.status(500).json({ error: 'Failed to save weather data', details: error.message });
+    }
+});
 
 module.exports = router;
