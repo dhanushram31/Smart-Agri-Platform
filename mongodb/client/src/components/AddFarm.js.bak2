@@ -1,0 +1,473 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { useNotification } from '../hooks/useNotification';
+import NotificationContainer from './NotificationContainer';
+import './AddFarm.css';
+
+function AddFarm() {
+  const { user } = useAuth();
+  const { notifications, showSuccess, showError, hideNotification } = useNotification();
+  const [form, setForm] = useState({
+    location: '',
+    crop_type: '',
+    planting_schedule: '',
+    soil_type: '',
+    irrigation_system: '',
+    size: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+
+  // Initialize enhancements on mount
+  useEffect(() => {
+    const handleInputFocus = (e) => {
+      const formGroup = e.target.closest('.form-group');
+      if (formGroup) {
+        formGroup.classList.add('focused');
+      }
+    };
+
+    const handleInputBlur = (e) => {
+      const formGroup = e.target.closest('.form-group');
+      if (formGroup) {
+        formGroup.classList.remove('focused');
+      }
+    };
+
+    const createRipple = (e) => {
+      if (e.target.disabled) return;
+      
+      const button = e.currentTarget;
+      const ripple = document.createElement('span');
+      const rect = button.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+
+      ripple.style.cssText = `
+        position: absolute;
+        width: \${size}px;
+        height: \${size}px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        left: \${x}px;
+        top: \${y}px;
+        pointer-events: none;
+        animation: rippleEffect 0.6s ease-out;
+      `;
+
+      button.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    };
+
+    // Add ripple animation to stylesheet
+    if (!document.getElementById('ripple-animation-style')) {
+      const style = document.createElement('style');
+      style.id = 'ripple-animation-style';
+      style.textContent = `
+        @keyframes rippleEffect {
+          0% {
+            transform: scale(0);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Add input animations
+    const inputs = document.querySelectorAll('.form-input, .form-select');
+    inputs.forEach(input => {
+      input.addEventListener('focus', handleInputFocus);
+      input.addEventListener('blur', handleInputBlur);
+    });
+
+    // Add ripple effect to button
+    const submitBtn = document.querySelector('.btn-primary');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', createRipple);
+    }
+    
+    return () => {
+      // Cleanup event listeners
+      inputs.forEach(input => {
+        input.removeEventListener('focus', handleInputFocus);
+        input.removeEventListener('blur', handleInputBlur);
+      });
+      if (submitBtn) {
+        submitBtn.removeEventListener('click', createRipple);
+      }
+    };
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+    
+    // Clear error for this field
+    if (formErrors[name]) {
+      setFormErrors({ ...formErrors, [name]: '' });
+    }
+
+    // Add validation class
+    if (value) {
+      e.target.classList.add('valid');
+      e.target.classList.remove('invalid');
+    } else {
+      e.target.classList.remove('valid', 'invalid');
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!form.location.trim()) {
+      errors.location = 'Location is required';
+    }
+    
+    if (!form.crop_type.trim()) {
+      errors.crop_type = 'Crop type is required';
+    }
+    
+    if (!form.planting_schedule) {
+      errors.planting_schedule = 'Planting schedule is required';
+    }
+    
+    if (!form.soil_type) {
+      errors.soil_type = 'Soil type is required';
+    }
+    
+    if (!form.irrigation_system) {
+      errors.irrigation_system = 'Irrigation system is required';
+    }
+    
+    if (!form.size || parseFloat(form.size) <= 0) {
+      errors.size = 'Valid farm size is required';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validate form
+    if (!validateForm()) {
+      showError('Please fill in all required fields correctly.', 'Validation Error');
+      return;
+    }
+    
+    // Validate user is logged in
+    if (!user || !user._id) {
+      showError('Please log in to add a farm.', 'Authentication Required');
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      const payload = { 
+        ...form, 
+        user_id: user._id,
+        size: parseFloat(form.size) || 0
+      };
+      console.log('Sending farm data:', payload);
+      const res = await axios.post('http://localhost:5002/api/farms', payload);
+      console.log('Farm created successfully:', res.data);
+      
+      // Show success notification
+      showSuccess(
+        `Your farm "\${form.crop_type}" in "\${form.location}" has been successfully added!`,
+        '🎉 Farm Added Successfully!'
+      );
+      
+      // Reset form with animation
+      const formElement = document.querySelector('.add-farm-form');
+      if (formElement) {
+        formElement.style.animation = 'none';
+        setTimeout(() => {
+          formElement.style.animation = '';
+        }, 10);
+      }
+      
+      setForm({ 
+        location: '', 
+        crop_type: '', 
+        planting_schedule: '', 
+        soil_type: '', 
+        irrigation_system: '', 
+        size: '' 
+      });
+      setFormErrors({});
+      
+      // Remove validation classes
+      const inputs = document.querySelectorAll('.form-input, .form-select');
+      inputs.forEach(input => {
+        input.classList.remove('valid', 'invalid');
+      });
+    } catch (err) {
+      console.error('Error adding farm:', err);
+      const errorMessage = err.response?.data?.error || err.response?.data?.details || 'Failed to add farm. Please try again.';
+      showError(errorMessage, 'Failed to Add Farm');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="add-farm-container">
+        {/* Floating Shapes */}
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+        </div>
+
+        <div className="add-farm-wrapper">
+          {/* Header */}
+          <div className="add-farm-header">
+            <div className="header-icon">🏡</div>
+            <h1 className="add-farm-title">Add New Farm</h1>
+            <p className="add-farm-subtitle">
+              Register your farm to start managing crops, tracking progress, and accessing AI-powered insights
+            </p>
+          </div>
+
+          {/* Form Card */}
+          <div className="add-farm-card">
+            <form onSubmit={handleSubmit} className="add-farm-form">
+              
+              {/* Farm Location Section */}
+              <div className="form-section">
+                <h3 className="section-title">
+                  <span className="section-icon">📍</span>
+                  Farm Location
+                </h3>
+                
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">🗺️</span>
+                    Location
+                    <span className="required-star">*</span>
+                  </label>
+                  <input
+                    name="location"
+                    value={form.location}
+                    onChange={handleChange}
+                    placeholder="Enter farm location (e.g., Village, District, State)"
+                    className="form-input"
+                    required
+                  />
+                  {formErrors.location && (
+                    <div className="error-message">
+                      <span className="error-icon">⚠️</span>
+                      {formErrors.location}
+                    </div>
+                  )}
+                  <div className="helper-text">
+                    <span className="helper-icon">💡</span>
+                    Be as specific as possible for accurate weather and soil data
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">📏</span>
+                    Farm Size
+                    <span className="required-star">*</span>
+                  </label>
+                  <input
+                    name="size"
+                    type="number"
+                    step="0.1"
+                    value={form.size}
+                    onChange={handleChange}
+                    placeholder="Enter size in acres"
+                    className="form-input"
+                    min="0.1"
+                    required
+                  />
+                  {formErrors.size && (
+                    <div className="error-message">
+                      <span className="error-icon">⚠️</span>
+                      {formErrors.size}
+                    </div>
+                  )}
+                  <div className="helper-text">
+                    <span className="helper-icon">💡</span>
+                    Size in acres (e.g., 5.5 acres)
+                  </div>
+                </div>
+              </div>
+
+              {/* Crop Information Section */}
+              <div className="form-section">
+                <h3 className="section-title">
+                  <span className="section-icon">🌾</span>
+                  Crop Information
+                </h3>
+                
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">🌱</span>
+                    Crop Type
+                    <span className="required-star">*</span>
+                  </label>
+                  <input
+                    name="crop_type"
+                    value={form.crop_type}
+                    onChange={handleChange}
+                    placeholder="Enter crop type (e.g., Rice, Wheat, Corn)"
+                    className="form-input"
+                    required
+                  />
+                  {formErrors.crop_type && (
+                    <div className="error-message">
+                      <span className="error-icon">⚠️</span>
+                      {formErrors.crop_type}
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">📅</span>
+                    Planting Schedule
+                    <span className="required-star">*</span>
+                  </label>
+                  <input
+                    name="planting_schedule"
+                    type="date"
+                    value={form.planting_schedule}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  />
+                  {formErrors.planting_schedule && (
+                    <div className="error-message">
+                      <span className="error-icon">⚠️</span>
+                      {formErrors.planting_schedule}
+                    </div>
+                  )}
+                  <div className="helper-text">
+                    <span className="helper-icon">💡</span>
+                    Select when you plan to plant this crop
+                  </div>
+                </div>
+              </div>
+
+              {/* Farm Infrastructure Section */}
+              <div className="form-section">
+                <h3 className="section-title">
+                  <span className="section-icon">🏗️</span>
+                  Farm Infrastructure
+                </h3>
+                
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">🪨</span>
+                    Soil Type
+                    <span className="required-star">*</span>
+                  </label>
+                  <select
+                    name="soil_type"
+                    value={form.soil_type}
+                    onChange={handleChange}
+                    className="form-select"
+                    required
+                  >
+                    <option value="">Select soil type</option>
+                    <option value="Clay">Clay</option>
+                    <option value="Sandy">Sandy</option>
+                    <option value="Loamy">Loamy</option>
+                    <option value="Silty">Silty</option>
+                    <option value="Peaty">Peaty</option>
+                    <option value="Chalky">Chalky</option>
+                  </select>
+                  {formErrors.soil_type && (
+                    <div className="error-message">
+                      <span className="error-icon">⚠️</span>
+                      {formErrors.soil_type}
+                    </div>
+                  )}
+                  <div className="helper-text">
+                    <span className="helper-icon">💡</span>
+                    Soil type helps in crop recommendation and yield prediction
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">
+                    <span className="label-icon">💧</span>
+                    Irrigation System
+                    <span className="required-star">*</span>
+                  </label>
+                  <select
+                    name="irrigation_system"
+                    value={form.irrigation_system}
+                    onChange={handleChange}
+                    className="form-select"
+                    required
+                  >
+                    <option value="">Select irrigation system</option>
+                    <option value="Drip">Drip Irrigation</option>
+                    <option value="Sprinkler">Sprinkler System</option>
+                    <option value="Canal">Canal Irrigation</option>
+                    <option value="Tube Well">Tube Well</option>
+                    <option value="Rainwater">Rainwater Harvesting</option>
+                    <option value="None">No Irrigation System</option>
+                  </select>
+                  {formErrors.irrigation_system && (
+                    <div className="error-message">
+                      <span className="error-icon">⚠️</span>
+                      {formErrors.irrigation_system}
+                    </div>
+                  )}
+                  <div className="helper-text">
+                    <span className="helper-icon">💡</span>
+                    Select your primary water source
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="btn-primary"
+              >
+                <div className="btn-content">
+                  {loading ? (
+                    <>
+                      <span className="spinner"></span>
+                      <span>Adding Farm...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="btn-icon">🚜</span>
+                      <span>Add Farm</span>
+                    </>
+                  )}
+                </div>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <NotificationContainer 
+        notifications={notifications}
+        onHideNotification={hideNotification}
+      />
+    </>
+  );
+}
+
+export default AddFarm;

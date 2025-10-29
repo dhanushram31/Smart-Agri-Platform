@@ -1,0 +1,592 @@
+/* CropPredictionForm.css - Modern Crop Prediction Component Styling */
+
+.crop-prediction-container {
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
+  padding: 1.5rem;
+  position: relative;
+}
+
+.crop-prediction-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: slideInUp 0.8s ease-out;
+}
+
+.crop-prediction-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.crop-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.title-icon {
+  font-size: 3rem;
+  animation: bounce 2s infinite;
+}
+
+.crop-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Form Styling */
+.crop-prediction-form {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 20px 40px var(--shadow-medium);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.crop-prediction-form:hover {
+  box-shadow: 0 25px 50px var(--shadow-heavy);
+  transform: translateY(-2px);
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.section-icon {
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.input-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.nutrients-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.environment-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.ph-grid {
+  grid-template-columns: 1fr;
+  max-width: 400px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.label-icon {
+  font-size: 1.2rem;
+}
+
+.form-input {
+  padding: 1rem 1.5rem;
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  font-size: 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+  transform: translateY(-2px);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.input-help {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-secondary);
+  padding: 0 0.5rem;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--border-color);
+  margin-top: 2rem;
+}
+
+.predict-btn {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border: none;
+  padding: 1.25rem 3rem;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-width: 200px;
+}
+
+.predict-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.predict-btn:hover::before {
+  left: 100%;
+}
+
+.predict-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(5, 150, 105, 0.4);
+}
+
+.predict-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-icon {
+  font-size: 1.3rem;
+}
+
+.btn-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+/* Error Message */
+.error-message {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: #dc2626;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #fca5a5;
+  animation: slideInUp 0.5s ease-out;
+}
+
+.error-icon {
+  font-size: 1.5rem;
+}
+
+/* Results Display */
+.results-display {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px var(--shadow-medium);
+  border: 1px solid var(--glass-border);
+  animation: slideInUp 0.8s ease-out 0.2s both;
+}
+
+.results-header {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.results-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.results-icon {
+  font-size: 2.5rem;
+  animation: pulse 2s infinite;
+}
+
+.results-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2.5rem;
+  background: var(--bg-secondary);
+}
+
+.result-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.result-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px var(--shadow-light);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.crop-result {
+  border-left: 4px solid #059669;
+}
+
+.price-result {
+  border-left: 4px solid #f59e0b;
+}
+
+.result-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.result-label {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin: 0;
+}
+
+.result-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.crop-name {
+  color: var(--accent-primary);
+  text-transform: capitalize;
+}
+
+.price-value {
+  color: #f59e0b;
+}
+
+.result-confidence {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Soil Analysis */
+.soil-analysis {
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border-top: 1px solid var(--border-color);
+}
+
+.analysis-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.analysis-item {
+  background: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.analysis-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.nutrient-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.nutrient-level {
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .nutrients-grid,
+  .environment-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .results-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .crop-prediction-container {
+    padding: 1rem;
+  }
+
+  .crop-prediction-form {
+    padding: 2rem;
+  }
+
+  .crop-title {
+    font-size: 2rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .title-icon {
+    font-size: 2.5rem;
+  }
+
+  .nutrients-grid,
+  .environment-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-section {
+    margin-bottom: 2rem;
+  }
+
+  .results-content {
+    padding: 1.5rem;
+  }
+
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .crop-prediction-container {
+    padding: 0.75rem;
+  }
+
+  .crop-prediction-form {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+
+  .crop-title {
+    font-size: 1.8rem;
+  }
+
+  .crop-subtitle {
+    font-size: 1rem;
+  }
+
+  .form-input {
+    padding: 0.875rem 1.25rem;
+    border-radius: 12px;
+  }
+
+  .predict-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 25px;
+  }
+
+  .results-display {
+    border-radius: 20px;
+  }
+
+  .results-header {
+    padding: 1.5rem;
+  }
+
+  .results-title {
+    font-size: 1.6rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .results-content {
+    padding: 1.25rem;
+  }
+
+  .result-card {
+    padding: 1.5rem;
+  }
+
+  .soil-analysis {
+    padding: 1.5rem;
+  }
+}
+
+/* Dark theme support */
+[data-theme="dark"] .crop-prediction-form {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+[data-theme="dark"] .results-display {
+  background: rgba(30, 41, 59, 0.9);
+}
+
+[data-theme="dark"] .result-card {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+[data-theme="dark"] .result-card:hover {
+  background: rgba(30, 41, 59, 0.95);
+}
+
+[data-theme="dark"] .analysis-item {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+/* Focus states for accessibility */
+.predict-btn:focus,
+.form-input:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

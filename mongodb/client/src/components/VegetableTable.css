@@ -1,0 +1,42 @@
+.blog-table-wrap-2 {
+    width: 95%;
+    margin: 20px auto;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.blog-table-wrap-2 table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.blog-table-wrap-2 th {
+    background-color: #2e7d32;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.blog-table-wrap-2 td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.blog-table-wrap-2 tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.blog-table-wrap-2 input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button:disabled {
+    opacity: 0.6;
+}

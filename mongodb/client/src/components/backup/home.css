@@ -1,0 +1,180 @@
+C:\Users\Disha\Climate-Smart-Agriculture-Platform\mongodb\client\src\components\Home.css
+
+.home-container {
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.blackText {
+    color: black;
+}
+
+.nav-bar-heading {
+    color: white;
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.description {
+    font-size: 18px;
+    color: #34495e;
+    margin-bottom: 40px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Enforce 3 columns */
+    gap: 20px; /* Adjusted gap for better spacing */
+    margin-top: 40px;
+    justify-items: center;
+    max-width: 100%;
+}
+
+.card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px; /* Adjusted to match screenshot card width */
+    text-align: left;
+    word-wrap: break-word;
+    white-space: normal;
+    min-height: 250px; /* Ensure consistent height for alignment */
+}
+
+.card h2 {
+    font-size: 24px;
+    color: #27ae60;
+    margin-bottom: 15px;
+}
+
+.card ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.card ul li {
+    margin-bottom: 10px;
+    line-height: 1.5;
+    text-align: left;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.learn-more {
+    display: inline-block;
+    margin-top: 15px;
+    color: #2980b9;
+    text-decoration: none;
+}
+
+.learn-more:hover {
+    text-decoration: underline;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.home-image {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    padding: 20px;
+    background-color: #27ae60;
+    color: white;
+    font-size: 14px;
+    margin-top: 40px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .card-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: 1fr; /* Stack cards vertically on smaller screens */
+    }
+
+    .image-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-image {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .description {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-container {
+        padding: 10px;
+    }
+
+    .card {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .home-image {
+        height: 150px;
+    }
+
+    .card-container {
+        gap: 15px;
+    }
+}
+ul{
+    list-style: none;
+    display: block;
+    
+    margin: 0;
+    padding: 0;
+}
+ul li {
+    color: #000000;
+    margin-left: 20px;
+}
