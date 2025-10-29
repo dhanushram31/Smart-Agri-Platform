@@ -1,0 +1,167 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Setup Animal Detection API",
+			"type": "shell",
+			"command": "${workspaceFolder}/animal-detection-api/setup.sh",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Animal Detection API (Development)",
+			"type": "shell",
+			"command": "${workspaceFolder}/animal-detection-api/start_dev.sh",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start Animal Detection API (Production)",
+			"type": "shell",
+			"command": "${workspaceFolder}/animal-detection-api/start_prod.sh",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",  
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Install Animal Detection Dependencies",
+			"type": "shell",
+			"command": "source venv/bin/activate && pip install -r requirements.txt",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Train Animal Detection Model (Nano)",
+			"type": "shell",
+			"command": "source venv/bin/activate && python3 train_dataset.py --mode train --model-size nano --output-path prepared_dataset",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Prepare Dataset from LabelImg",
+			"type": "shell",
+			"command": "source venv/bin/activate && python3 train_dataset.py --mode prepare --dataset-type labelimg --images-path ${input:imagesPath} --annotations-path ${input:annotationsPath} --output-path prepared_dataset",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Test Animal Detection API",
+			"type": "shell",
+			"command": "source venv/bin/activate && python3 -c \"import app; print('✅ API import successful'); import detection; print('✅ Detection module OK'); import email_alert; print('✅ Email module OK')\"",
+			"group": "test",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "View Animal Detection Logs",
+			"type": "shell",
+			"command": "tail -f logs/animal_detection.log",
+			"group": "test",
+			"options": {
+				"cwd": "${workspaceFolder}/animal-detection-api"
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "imagesPath",
+			"description": "Path to images directory",
+			"default": "datasets/images",
+			"type": "promptString"
+		},
+		{
+			"id": "annotationsPath", 
+			"description": "Path to annotations directory",
+			"default": "datasets/annotations",
+			"type": "promptString"
+		}
+	]
+}
