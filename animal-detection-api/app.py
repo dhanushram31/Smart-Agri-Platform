@@ -41,10 +41,16 @@ app.secret_key = os.environ.get('SECRET_KEY', 'animal-detection-secret-key-2025'
 
 # Configure CORS to allow React frontend (use flask_cors to handle preflight correctly)
 CORS(app,
-     resources={r"/api/*": {"origins": ["http://localhost:3001", "http://localhost:3000"]}},
-     supports_credentials=True,
-     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-     allow_headers=['Content-Type', 'Authorization', 'X-Requested-With'])
+     resources={
+         r"/api/*": {
+             "origins": ["http://localhost:3001", "http://localhost:3000"],
+             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+             "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
+             "expose_headers": ["Content-Type"],
+             "supports_credentials": True,
+             "max_age": 3600
+         }
+     })
 
 # Configuration
 UPLOAD_FOLDER = 'static/uploads'
@@ -160,9 +166,18 @@ def results_page():
 # API ROUTES (BACKEND FUNCTIONALITY)
 # =============================================================================
 
-@app.route('/api/upload_video', methods=['POST'])
+@app.route('/api/upload_video', methods=['POST', 'OPTIONS'])
 def upload_video():
     """Handle video upload and processing with real-time progress tracking."""
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin', '*'))
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        response.headers.add('Access-Control-Max-Age', '3600')
+        return response, 200
+    
     # Log request headers to help diagnose CORS/preflight issues
     app.logger.info("Received upload request, headers=%s", dict(request.headers))
     try:
@@ -196,6 +211,7 @@ def upload_video():
         processed_path = os.path.join(app.config['PROCESSED_FOLDER'], processed_filename)
         
         app.logger.info(f"Starting video processing: {filename} ({total_frames} frames, {duration:.1f}s)")
+        app.logger.info(f"Unique filename for tracking: {unique_filename}")
         
         # Initialize progress tracking for this video
         global processing_progress
@@ -210,6 +226,8 @@ def upload_video():
             'message': 'Initializing video processing...',
             'timestamp': datetime.now().isoformat()
         }
+        
+        app.logger.info(f"Progress tracking initialized for: {unique_filename}")
         
         # Define progress callback function
         def update_progress_callback(video_id, progress_data):
@@ -240,11 +258,12 @@ def upload_video():
             except Exception as email_error:
                 app.logger.warning(f"Failed to send email alert: {str(email_error)}")
         
-        # Enhanced response with video metadata
+        # Enhanced response with video metadata and video_id for progress tracking
         response_data = {
             'success': True,
             'message': f'Video processed successfully! Found {len(detections)} animals.',
             'record_id': record['id'],
+            'video_id': unique_filename,  # Include video_id for frontend progress tracking
             'processed_video': processed_filename,
             'processed_video_url': f'/static/processed/{processed_filename}',
             'detections': detections,
@@ -263,6 +282,11 @@ def upload_video():
             }
         }
         
+        # Clean up progress tracking after completion
+        if unique_filename in processing_progress:
+            processing_progress[unique_filename]['status'] = 'completed'
+            processing_progress[unique_filename]['progress_percentage'] = 100
+        
         app.logger.info(f"✅ Video processing completed: {len(detections)} detections in {processing_time:.2f}s")
         return jsonify(response_data)
         
@@ -270,9 +294,18 @@ def upload_video():
         app.logger.error(f"Error processing video: {str(e)}")
         return jsonify({'error': f'Error processing video: {str(e)}'}), 500
 
-@app.route('/api/start_live_stream', methods=['POST'])
+@app.route('/api/start_live_stream', methods=['POST', 'OPTIONS'])
 def start_live_stream():
     """Start live CCTV/RTSP stream processing."""
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin', '*'))
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        response.headers.add('Access-Control-Max-Age', '3600')
+        return response, 200
+    
     global live_stream_active, live_stream_thread, current_rtsp_url
     
     try:
@@ -303,9 +336,18 @@ def start_live_stream():
         app.logger.error(f"Error starting live stream: {str(e)}")
         return jsonify({'error': f'Error starting live stream: {str(e)}'}), 500
 
-@app.route('/api/stop_live_stream', methods=['POST'])
+@app.route('/api/stop_live_stream', methods=['POST', 'OPTIONS'])
 def stop_live_stream():
     """Stop the active live stream."""
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin', '*'))
+        response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        response.headers.add('Access-Control-Max-Age', '3600')
+        return response, 200
+    
     global live_stream_active
     
     try:
@@ -348,8 +390,18 @@ def live_stream_stats():
 @app.route('/video_feed')
 def video_feed():
     """Stream processed video feed for live detection."""
-    return Response(generate_video_stream(), 
-                   mimetype='multipart/x-mixed-replace; boundary=frame')
+    response = Response(generate_video_stream(), 
+                       mimetype='multipart/x-mixed-replace; boundary=frame')
+    
+    # Add CORS headers for cross-origin video streaming
+    origin = request.headers.get('Origin', 'http://localhost:3001')
+    response.headers.add('Access-Control-Allow-Origin', origin)
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Cache-Control', 'no-cache, no-store, must-revalidate')
+    response.headers.add('Pragma', 'no-cache')
+    response.headers.add('Expires', '0')
+    
+    return response
 
 @app.route('/api/health')
 def health_check():
@@ -366,21 +418,72 @@ def health_check():
         }
     })
 
-@app.route('/api/processing_progress/<video_id>')
+@app.route('/api/processing_progress/<path:video_id>')
 def get_processing_progress(video_id):
     """Get real-time processing progress for a specific video."""
     global processing_progress
     
-    if video_id not in processing_progress:
+    app.logger.info(f"Progress request for video_id: {video_id}")
+    app.logger.info(f"Available keys in processing_progress: {list(processing_progress.keys())}")
+    
+    # Try to find the video_id with or without extension
+    actual_key = None
+    
+    # First, try exact match
+    if video_id in processing_progress:
+        actual_key = video_id
+    else:
+        # Try adding common video extensions if not found
+        for ext in ['.mp4', '.avi', '.mov', '.mkv', '.wmv', '.flv', '.webm']:
+            if video_id + ext in processing_progress:
+                actual_key = video_id + ext
+                break
+        
+        # If still not found, try fuzzy matching based on base filename
+        if actual_key is None:
+            # Extract the base name from the requested video_id (remove timestamp and UUID if present)
+            video_id_parts = video_id.replace('.mp4', '').replace('.avi', '').replace('.mov', '').split('_')
+            
+            # Get the first part which should be the original filename (e.g., "animals", "855538-hd")
+            if len(video_id_parts) > 0:
+                base_name = video_id_parts[0]
+                
+                # Try to find a key that starts with this base name
+                for key in processing_progress.keys():
+                    key_base = os.path.splitext(key)[0].split('_')[0]
+                    if key_base == base_name or key.startswith(base_name):
+                        actual_key = key
+                        app.logger.info(f"Fuzzy matched video_id '{video_id}' to '{actual_key}'")
+                        break
+        
+        # Last resort: try matching by any substring
+        if actual_key is None:
+            for key in processing_progress.keys():
+                key_without_ext = os.path.splitext(key)[0]
+                video_id_without_ext = os.path.splitext(video_id)[0]
+                
+                # Check if either contains the other (more lenient matching)
+                if (video_id_without_ext in key_without_ext or 
+                    key_without_ext in video_id_without_ext or
+                    key_without_ext.startswith(video_id_without_ext) or 
+                    video_id_without_ext.startswith(key_without_ext)):
+                    actual_key = key
+                    app.logger.info(f"Substring matched video_id '{video_id}' to '{actual_key}'")
+                    break
+    
+    if actual_key is None:
         return jsonify({
             'error': 'Video processing not found',
             'video_id': video_id,
-            'status': 'not_found'
+            'status': 'not_found',
+            'available_ids': list(processing_progress.keys())[:5],  # Show first 5 available IDs for debugging
+            'hint': 'The video_id in the URL does not match any processing records. Check the available_ids to see what IDs are currently being tracked.'
         }), 404
     
-    progress_data = processing_progress[video_id]
+    progress_data = processing_progress[actual_key]
     return jsonify({
-        'video_id': video_id,
+        'video_id': actual_key,  # Return the actual key used
+        'requested_id': video_id,  # Return what was requested
         'status': progress_data.get('status', 'unknown'),
         'progress_percentage': progress_data.get('progress_percentage', 0),
         'current_frame': progress_data.get('current_frame', 0),

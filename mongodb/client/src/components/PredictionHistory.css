@@ -1,0 +1,545 @@
+/* Prediction History Styles */
+
+.prediction-history {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.history-title {
+    font-size: 28px;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.title-icon {
+    font-size: 32px;
+}
+
+/* Controls */
+.history-controls {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.filter-group,
+.sort-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label,
+.sort-group label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.filter-group select,
+.sort-group select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.filter-group select:hover,
+.sort-group select:hover {
+    border-color: #10b981;
+}
+
+.sort-order-btn {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.sort-order-btn:hover {
+    background: #f3f4f6;
+    border-color: #10b981;
+}
+
+/* Loading State */
+.prediction-history-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #10b981;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.prediction-history-loading p {
+    margin-top: 16px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+/* Error State */
+.prediction-history-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.error-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.prediction-history-error p {
+    color: #dc2626;
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.retry-btn {
+    padding: 10px 24px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.retry-btn:hover {
+    background: #059669;
+}
+
+/* Empty State */
+.no-predictions {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.no-predictions-icon {
+    font-size: 64px;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.no-predictions h3 {
+    font-size: 24px;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.no-predictions p {
+    color: #6b7280;
+    font-size: 16px;
+}
+
+/* Timeline */
+.predictions-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Prediction Card */
+.prediction-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s;
+    animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.prediction-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #10b981;
+}
+
+.prediction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.prediction-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-icon {
+    font-size: 18px;
+}
+
+.date-text {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.prediction-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.reuse-btn,
+.details-btn {
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.reuse-btn {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.reuse-btn:hover {
+    background: #d1fae5;
+    border-color: #10b981;
+}
+
+.details-btn {
+    color: #6b7280;
+    min-width: 32px;
+}
+
+.details-btn:hover {
+    background: #f3f4f6;
+}
+
+/* Summary */
+.prediction-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.crop-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.crop-icon {
+    font-size: 32px;
+}
+
+.crop-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.crop-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.crop-price {
+    font-size: 16px;
+    color: #10b981;
+    font-weight: 600;
+    margin: 4px 0 0 0;
+}
+
+.season-badge {
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #92400e;
+}
+
+/* Nutrients Summary */
+.nutrients-summary {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.nutrient-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.nutrient-label {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.nutrient-value {
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Details Section */
+.prediction-details {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #e5e7eb;
+    animation: expandDown 0.3s ease-out;
+}
+
+@keyframes expandDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px;
+    }
+}
+
+.details-section {
+    margin-bottom: 20px;
+}
+
+.details-section h4 {
+    font-size: 16px;
+    color: #1f2937;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.soil-report-info {
+    color: #10b981;
+    font-size: 14px;
+    padding: 12px;
+    background: #d1fae5;
+    border-radius: 8px;
+    margin: 0;
+}
+
+.prediction-notes {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 12px;
+    border-radius: 4px;
+    color: #78350f;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.recommendations-list {
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.recommendations-list strong {
+    display: block;
+    color: #1e40af;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.recommendation-item {
+    font-size: 13px;
+    color: #1f2937;
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+/* Footer */
+.history-footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+.total-count {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .prediction-history {
+        padding: 16px;
+    }
+
+    .history-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .history-title {
+        font-size: 24px;
+    }
+
+    .history-controls {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .filter-group,
+    .sort-group {
+        width: 100%;
+    }
+
+    .filter-group select,
+    .sort-group select {
+        flex: 1;
+    }
+
+    .prediction-card {
+        padding: 16px;
+    }
+
+    .prediction-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .crop-name {
+        font-size: 18px;
+    }
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-title {
+        font-size: 20px;
+    }
+
+    .title-icon {
+        font-size: 24px;
+    }
+
+    .crop-icon {
+        font-size: 24px;
+    }
+
+    .nutrients-summary {
+        gap: 8px;
+    }
+
+    .nutrient-badge {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .prediction-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .reuse-btn,
+    .details-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

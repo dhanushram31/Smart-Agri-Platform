@@ -1,0 +1,279 @@
+.nutrient-gauges {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gauges-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.title-icon {
+  font-size: 24px;
+}
+
+.gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.gauge-card {
+  background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gauge-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.gauge-card.deficient {
+  border-color: rgba(220, 38, 38, 0.3);
+  background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+}
+
+.gauge-card.moderate {
+  border-color: rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+}
+
+.gauge-card.optimal {
+  border-color: rgba(5, 150, 105, 0.3);
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.gauge-card.excess {
+  border-color: rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+}
+
+.gauge-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.nutrient-icon {
+  font-size: 24px;
+}
+
+.nutrient-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.gauge-container {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 16px;
+}
+
+.gauge-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.gauge-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.gauge-status {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gauge-status.deficient {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.gauge-status.moderate {
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.gauge-status.optimal {
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.gauge-status.excess {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.range-indicator {
+  margin-top: 12px;
+}
+
+.range-bar {
+  position: relative;
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    #dc2626 0%,
+    #f59e0b 25%,
+    #059669 50%,
+    #3b82f6 100%
+  );
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+.range-marker {
+  position: absolute;
+  top: -3px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 2px solid #1f2937;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  transition: left 0.5s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.gauges-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+.legend-dot.deficient {
+  background: rgba(220, 38, 38, 0.2);
+  border-color: #dc2626;
+}
+
+.legend-dot.moderate {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+}
+
+.legend-dot.optimal {
+  background: rgba(5, 150, 105, 0.2);
+  border-color: #059669;
+}
+
+.legend-dot.excess {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .gauges-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .gauge-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .gauge-card {
+    padding: 16px;
+  }
+
+  .gauges-legend {
+    gap: 12px;
+  }
+
+  .legend-item {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gauges-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gauge-container {
+    width: 140px;
+    height: 140px;
+  }
+}

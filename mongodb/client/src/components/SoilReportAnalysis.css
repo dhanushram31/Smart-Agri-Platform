@@ -1,0 +1,423 @@
+/* SoilReportAnalysis.css */
+
+.soil-report-analysis-section {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    margin: 32px 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.analysis-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.header-icon {
+    font-size: 2rem;
+}
+
+.analysis-header h2 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.analysis-description {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+/* File Upload Zone */
+.file-upload-zone {
+    border: 3px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    margin-bottom: 20px;
+}
+
+.file-upload-zone:hover {
+    border-color: #10b981;
+    background: #f0fdf4;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
+
+.file-upload-zone.drag-active {
+    border-color: #10b981;
+    background: #dcfce7;
+    transform: scale(1.02);
+}
+
+.file-upload-zone.has-file {
+    border-style: solid;
+    border-color: #10b981;
+    background: #f0fdf4;
+    cursor: default;
+}
+
+.file-upload-zone.has-file:hover {
+    transform: none;
+}
+
+.upload-prompt {
+    pointer-events: none;
+}
+
+.upload-icon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.upload-text {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: #475569;
+}
+
+.upload-text strong {
+    color: #10b981;
+    font-weight: 700;
+}
+
+.upload-hint {
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* Uploaded File Info */
+.uploaded-file-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: center;
+}
+
+.file-icon {
+    font-size: 3rem;
+}
+
+.file-details {
+    text-align: left;
+}
+
+.file-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+    word-break: break-word;
+}
+
+.file-size {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.remove-file-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.remove-file-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* Messages */
+.analysis-error-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    border-radius: 10px;
+    color: #991b1b;
+    font-weight: 500;
+    margin-bottom: 20px;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.analysis-success-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 10px;
+    color: #166534;
+    font-weight: 500;
+    margin-bottom: 20px;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-icon,
+.success-icon {
+    font-size: 1.4rem;
+}
+
+/* Enhanced Extracting State with Progress */
+.analysis-extracting {
+    padding: 24px;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 2px solid #93c5fd;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.extraction-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.extraction-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e0e7ff;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.extraction-text {
+    text-align: left;
+    flex: 1;
+}
+
+.extraction-text strong {
+    color: #1e40af;
+    font-size: 1.05rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.extraction-text small {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+}
+
+.progress-text {
+    text-align: center;
+    color: #1e40af;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.cancel-extraction-btn {
+    width: 100%;
+    padding: 8px 16px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.cancel-extraction-btn:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+/* Analyze Button */
+.analyze-btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.analyze-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4);
+}
+
+.analyze-btn:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-icon {
+    font-size: 1.3rem;
+}
+
+.btn-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* Analysis Results */
+.analysis-results {
+    margin-top: 32px;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .soil-report-analysis-section {
+        padding: 20px;
+        margin: 20px 0;
+    }
+
+    .analysis-header h2 {
+        font-size: 1.4rem;
+    }
+
+    .file-upload-zone {
+        padding: 32px 20px;
+    }
+
+    .upload-icon {
+        font-size: 3rem;
+    }
+
+    .uploaded-file-info {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .file-details {
+        text-align: center;
+    }
+
+    .analyze-btn {
+        max-width: 100%;
+        padding: 14px 24px;
+    }
+
+    .analysis-extracting {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .extraction-text {
+        text-align: center;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .soil-report-analysis-section {
+        box-shadow: none;
+        border: 1px solid #e2e8f0;
+    }
+
+    .file-upload-zone,
+    .analyze-btn,
+    .remove-file-btn {
+        display: none;
+    }
+}

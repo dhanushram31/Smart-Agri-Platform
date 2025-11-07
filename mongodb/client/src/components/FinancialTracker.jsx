@@ -267,145 +267,190 @@ const FinancialTracker = ({ farmId, farmName, farmLocation }) => {
   return (
     <div className="financial-tracker-container">
       <div className="tracker-header">
-        <h3>💲Financial Tracker</h3>
-        <button onClick={generatePDF} className="pdf-btn">
-          📄 Download PDF Report
+        <h3>Financial Tracker</h3>
+        <button onClick={generatePDF} className="pdf-export-btn">
+          📄 Export PDF Report
         </button>
       </div>
 
       <div id="financial-report" className="financial-summary">
         <div className="summary-cards">
           <div className="summary-card income">
-            <div className="card-icon">💸</div>
-            <div className="card-content">
-              <h4>Total Income</h4>
-              <p>₹{totalIncome.toFixed(2)}</p>
-            </div>
+            <h4>Total Income</h4>
+            <p className="amount">₹{totalIncome.toFixed(2)}</p>
+            <div className="icon">💵</div>
           </div>
           <div className="summary-card expense">
-            <div className="card-icon">📉</div>
-            <div className="card-content">
-              <h4>Total Expenses</h4>
-              <p>₹{totalExpenses.toFixed(2)}</p>
-            </div>
+            <h4>Total Expenses</h4>
+            <p className="amount">₹{totalExpenses.toFixed(2)}</p>
+            <div className="icon">💸</div>
           </div>
-          <div className={`summary-card profit ${netProfit >= 0 ? 'positive' : 'negative'}`}>
-            <div className="card-icon">{netProfit >= 0 ? '📈' : '📉'}</div>
-            <div className="card-content">
-              <h4>Net Profit</h4>
-              <p>₹{netProfit.toFixed(2)}</p>
-            </div>
+          <div className={`summary-card profit ${netProfit < 0 ? 'negative' : ''}`}>
+            <h4>Net {netProfit >= 0 ? 'Profit' : 'Loss'}</h4>
+            <p className="amount">₹{Math.abs(netProfit).toFixed(2)}</p>
+            <div className="icon">{netProfit >= 0 ? '📈' : '📉'}</div>
           </div>
-        </div>
-      </div>
-
-      <div className="transaction-input-section">
-        <h4>Add New Transaction</h4>
-        <div className="input-grid">
-          <input
-            type="text"
-            value={newTransaction.description}
-            onChange={(e) => setNewTransaction({...newTransaction, description: e.target.value})}
-            placeholder="Description..."
-            className="transaction-input"
-          />
-          <input
-            type="number"
-            step="0.01"
-            value={newTransaction.amount}
-            onChange={(e) => setNewTransaction({...newTransaction, amount: e.target.value})}
-            placeholder="Amount in ₹"
-            className="transaction-input"
-          />
-          <select
-            value={newTransaction.type}
-            onChange={(e) => setNewTransaction({...newTransaction, type: e.target.value})}
-            className="transaction-select"
-          >
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
-          <select
-            value={newTransaction.category}
-            onChange={(e) => setNewTransaction({...newTransaction, category: e.target.value})}
-            className="transaction-select"
-          >
-            <option value="seeds">Seeds</option>
-            <option value="fertilizer">Fertilizer</option>
-            <option value="equipment">Equipment</option>
-            <option value="labor">Labor</option>
-            <option value="irrigation">Irrigation</option>
-            <option value="harvest">Harvest Sale</option>
-            <option value="marketing">Marketing</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="fuel">Fuel</option>
-            <option value="other">Other</option>
-          </select>
-          <input
-            type="date"
-            value={newTransaction.date}
-            onChange={(e) => setNewTransaction({...newTransaction, date: e.target.value})}
-            className="transaction-input"
-          />
-          <button onClick={addTransaction} className="add-transaction-btn">
-             Add Transaction
-          </button>
         </div>
       </div>
 
       <div className="filters-section">
-        <div className="filters">
-          <select value={filter} onChange={(e) => setFilter(e.target.value)} className="filter-select">
-            <option value="all">All Transactions</option>
-            <option value="income">Income Only</option>
-            <option value="expense">Expenses Only</option>
-          </select>
-          <select value={dateRange} onChange={(e) => setDateRange(e.target.value)} className="filter-select">
-            <option value="all">All Time</option>
-            <option value="week">Last Week</option>
-            <option value="month">Last Month</option>
-            <option value="quarter">Last Quarter</option>
-            <option value="year">Last Year</option>
-          </select>
+        <div className="filters-grid">
+          <div className="filter-group">
+            <label>Transaction Type</label>
+            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="filter-select">
+              <option value="all">All Transactions</option>
+              <option value="income">Income Only</option>
+              <option value="expense">Expenses Only</option>
+            </select>
+          </div>
+          <div className="filter-group">
+            <label>Time Period</label>
+            <select value={dateRange} onChange={(e) => setDateRange(e.target.value)} className="filter-select">
+              <option value="all">All Time</option>
+              <option value="week">Last Week</option>
+              <option value="month">Last Month</option>
+              <option value="quarter">Last Quarter</option>
+              <option value="year">Last Year</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div className="transactions-list">
-        <h4>Transactions ({getFilteredTransactions().length})</h4>
+      <div className="add-transaction-form">
+        <div className="form-grid">
+          <div className="form-group">
+            <label>Description</label>
+            <input
+              type="text"
+              value={newTransaction.description}
+              onChange={(e) => setNewTransaction({...newTransaction, description: e.target.value})}
+              placeholder="Enter description..."
+              className="transaction-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>Amount (₹)</label>
+            <input
+              type="number"
+              step="0.01"
+              value={newTransaction.amount}
+              onChange={(e) => setNewTransaction({...newTransaction, amount: e.target.value})}
+              placeholder="0.00"
+              className="transaction-input"
+            />
+          </div>
+          <div className="form-group">
+            <label>Type</label>
+            <select
+              value={newTransaction.type}
+              onChange={(e) => setNewTransaction({...newTransaction, type: e.target.value})}
+              className="transaction-select"
+            >
+              <option value="income">💰 Income</option>
+              <option value="expense">💸 Expense</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Category</label>
+            <select
+              value={newTransaction.category}
+              onChange={(e) => setNewTransaction({...newTransaction, category: e.target.value})}
+              className="transaction-select"
+            >
+              <option value="seeds">🌱 Seeds</option>
+              <option value="fertilizer">🧪 Fertilizer</option>
+              <option value="equipment">🚜 Equipment</option>
+              <option value="labor">👷 Labor</option>
+              <option value="irrigation">💧 Irrigation</option>
+              <option value="harvest">🌾 Harvest Sale</option>
+              <option value="marketing">📊 Marketing</option>
+              <option value="maintenance">🔧 Maintenance</option>
+              <option value="fuel">⛽ Fuel</option>
+              <option value="other">📝 Other</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Date</label>
+            <input
+              type="date"
+              value={newTransaction.date}
+              onChange={(e) => setNewTransaction({...newTransaction, date: e.target.value})}
+              className="transaction-input"
+            />
+          </div>
+        </div>
+        <button onClick={addTransaction} className="add-btn">
+          ➕ Add Transaction
+        </button>
+      </div>
+
+      <div className="transactions-container">
+        <div className="transactions-header">
+          <h4>📋 Recent Transactions</h4>
+          <span className="transaction-count">{getFilteredTransactions().length} transaction{getFilteredTransactions().length !== 1 ? 's' : ''}</span>
+        </div>
         {getFilteredTransactions().length === 0 ? (
-          <div className="no-transactions">
-            <p>No transactions found. Add your first transaction above! 💰</p>
+          <div className="empty-state">
+            <div className="empty-state-icon">💰</div>
+            <p>No transactions found</p>
+            <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>Add your first transaction to start tracking!</p>
           </div>
         ) : (
-          getFilteredTransactions().map((transaction) => (
-            <div key={transaction.id} className={`transaction-item ${transaction.type}`}>
-              <div className="transaction-content">
-                <div className="transaction-main">
-                  <span className="transaction-icon">{getCategoryIcon(transaction.category)}</span>
-                  <div className="transaction-details">
-                    <div className="transaction-description">{transaction.description}</div>
-                    <div className="transaction-meta">
-                      <span className="transaction-category">{transaction.category}</span>
-                      <span className="transaction-date">{new Date(transaction.date).toLocaleDateString()}</span>
-                    </div>
+          <div className="transactions-list">
+            {getFilteredTransactions().map((transaction) => (
+              <div key={transaction.id} className="transaction-item">
+                <div className={`transaction-icon ${transaction.type}`}>
+                  {getCategoryIcon(transaction.category)}
+                </div>
+                <div className="transaction-details">
+                  <div className="transaction-title">{transaction.description}</div>
+                  <div className="transaction-meta">
+                    <span className="transaction-category">{transaction.category}</span>
+                    <span className="transaction-date">📅 {new Date(transaction.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                   </div>
                 </div>
-                <div className="transaction-amount-section">
-                  <div className={`transaction-amount ${transaction.type}`}>
-                    {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toFixed(2)}
-                  </div>
-                  <button 
-                    onClick={() => deleteTransaction(transaction.id)}
-                    className="delete-transaction-btn"
-                    title="Delete transaction"
-                  >
-                    🗑️
-                  </button>
+                <div className={`transaction-amount ${transaction.type}`}>
+                  {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toFixed(2)}
+                </div>
+                <button 
+                  onClick={() => deleteTransaction(transaction.id)}
+                  className="delete-btn"
+                  title="Delete transaction"
+                  aria-label="Delete transaction"
+                >
+                  🗑️
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="category-breakdown">
+        <h4>📊 Category Breakdown</h4>
+        <div className="category-grid">
+          {Object.entries(getCategoryBreakdown()).map(([category, amounts]) => (
+            <div key={category} className="category-card">
+              <div className="category-name">
+                {getCategoryIcon(category)} {category.charAt(0).toUpperCase() + category.slice(1)}
+              </div>
+              <div className="category-amounts">
+                <div className="category-row">
+                  <label>Income:</label>
+                  <span className="value income">₹{amounts.income.toFixed(2)}</span>
+                </div>
+                <div className="category-row">
+                  <label>Expense:</label>
+                  <span className="value expense">₹{amounts.expense.toFixed(2)}</span>
+                </div>
+                <div className="category-row">
+                  <label>Net:</label>
+                  <span className="value net">₹{(amounts.income - amounts.expense).toFixed(2)}</span>
                 </div>
               </div>
             </div>
-          ))
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -8,11 +8,71 @@ const WeatherForm = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [detectingLocation, setDetectingLocation] = useState(false);
+    const [locationMethod, setLocationMethod] = useState('zipcode'); // 'zipcode' or 'auto'
+
+    const autoDetectLocation = () => {
+        setError('');
+        setDetectingLocation(true);
+        
+        if (!navigator.geolocation) {
+            setError('Geolocation is not supported by your browser');
+            setDetectingLocation(false);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const { latitude, longitude } = position.coords;
+                    const response = await axios.post('http://localhost:5002/api/weather/coordinates', {
+                        latitude,
+                        longitude,
+                        tempMetric,
+                    });
+                    setWeatherData(response.data);
+                    setLocationMethod('auto');
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    setError('Failed to fetch weather data for your location. Please try again.');
+                } finally {
+                    setDetectingLocation(false);
+                }
+            },
+            (error) => {
+                console.error('Geolocation error:', error);
+                let errorMessage = 'Failed to get your location. ';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage += 'Please allow location access in your browser.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage += 'Location information is unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage += 'Location request timed out.';
+                        break;
+                    default:
+                        errorMessage += 'An unknown error occurred.';
+                }
+                
+                setError(errorMessage);
+                setDetectingLocation(false);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    };
 
     const saveFormData = async (event) => {
         event.preventDefault();
         setError('');
         setLoading(true);
+        setLocationMethod('zipcode');
 
         try {
             const response = await axios.post('http://localhost:5002/api/weather', {
@@ -64,7 +124,15 @@ const WeatherForm = () => {
                         {getWeatherIcon(weather[0].main)}
                     </div>
                     <div className="weather-location">
-                        <h2>{name}</h2>
+                        <div className="location-header">
+                            <h2>{name}</h2>
+                            {locationMethod === 'auto' && (
+                                <span className="location-badge">
+                                    <span className="badge-icon">📍</span>
+                                    Auto-Detected
+                                </span>
+                            )}
+                        </div>
                         <p className="coordinates">
                             {coord.lat.toFixed(2)}°, {coord.lon.toFixed(2)}°
                         </p>
@@ -181,10 +249,35 @@ const WeatherForm = () => {
                     <p className="weather-subtitle">Get real-time weather data for your location</p>
                 </div>
 
+                <div className="location-method-selector">
+                    <button
+                        type="button"
+                        className="auto-detect-btn"
+                        onClick={autoDetectLocation}
+                        disabled={detectingLocation}
+                    >
+                        {detectingLocation ? (
+                            <>
+                                <span className="btn-spinner"></span>
+                                Detecting Location...
+                            </>
+                        ) : (
+                            <>
+                                <span className="btn-icon">📍</span>
+                                Auto-Detect My Location
+                            </>
+                        )}
+                    </button>
+                    
+                    <div className="divider">
+                        <span className="divider-text">OR</span>
+                    </div>
+                </div>
+
                 <form onSubmit={saveFormData} className="weather-form">
                     <div className="form-group">
                         <label htmlFor="zipCode" className="form-label">
-                            <span className="label-icon">📍</span>
+                            <span className="label-icon">�️</span>
                             Location (Zip Code)
                         </label>
                         <input

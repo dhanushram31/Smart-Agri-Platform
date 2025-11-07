@@ -26,9 +26,13 @@ __pycache__/
 animal-detection-api/__pycache__/
 animal-detection-api/venv/
 animal-detection-api/env/
+crop-prediction-api/venv/
+crop-prediction-api/env/
+crop-prediction-api/__pycache__/
 venv/
 env/
 ENV/
+*.pyc
 
 # AI Models (large files)
 *.pt

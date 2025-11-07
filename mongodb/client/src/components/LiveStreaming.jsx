@@ -21,6 +21,16 @@ const LiveStreaming = () => {
   const statsIntervalRef = useRef(null);
   const durationIntervalRef = useRef(null);
 
+  // Force video reload when streaming state changes
+  useEffect(() => {
+    if (streamState.isStreaming && videoRef.current) {
+      console.log('🎥 Streaming is active, forcing video reload...');
+      const timestamp = new Date().getTime();
+      videoRef.current.src = `http://localhost:5003/video_feed?t=${timestamp}`;
+      console.log('📺 Video src set to:', videoRef.current.src);
+    }
+  }, [streamState.isStreaming]);
+
   useEffect(() => {
     return () => {
       stopStream();
@@ -71,10 +81,8 @@ const LiveStreaming = () => {
           stats: { ...prev.stats, streamDuration: 0 }
         }));
 
-        // Start video feed
-        if (videoRef.current) {
-          videoRef.current.src = 'http://localhost:5003/video_feed';
-        }
+        // Video src is set directly in JSX, no need to set it here
+        // The img tag will automatically load when isStreaming becomes true
 
         // Start polling for stats
         startStatsPolling();
@@ -291,14 +299,29 @@ const LiveStreaming = () => {
           <div className="video-container">
             {streamState.isStreaming ? (
               <>
+                <div className="loading-overlay">
+                  <div className="loading-spinner"></div>
+                  <p>Loading video stream...</p>
+                </div>
                 <img
                   ref={videoRef}
                   alt="Live Stream"
                   className="video-feed"
-                  onError={() => {
+                  crossOrigin="anonymous"
+                  onLoad={() => {
+                    console.log('✅ Video stream loaded successfully');
+                    console.log('📊 Image dimensions:', videoRef.current?.naturalWidth, 'x', videoRef.current?.naturalHeight);
+                    // Hide loading overlay
+                    const loadingOverlay = document.querySelector('.loading-overlay');
+                    if (loadingOverlay) loadingOverlay.style.display = 'none';
+                  }}
+                  onError={(e) => {
+                    console.error('❌ Video stream error:', e);
+                    console.error('📍 Failed src:', videoRef.current?.src);
+                    console.error('🔍 Check: 1) API running? 2) Stream active? 3) CORS headers?');
                     setStreamState(prev => ({
                       ...prev,
-                      error: 'Failed to load video stream'
+                      error: 'Failed to load video stream. Check console for details.'
                     }));
                   }}
                 />

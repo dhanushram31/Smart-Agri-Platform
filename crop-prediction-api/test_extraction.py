@@ -1,0 +1,16 @@
+"""Quick test script to diagnose extraction issues"""
+import json
+from soil_extractor import extract_soil_data
+
+# Test with simple PDF containing all 7 parameters
+test_data = {
+    "fileName": "test.pdf",
+    "fileType": "application/pdf",
+    "fileSize": 1000,
+    "fileData": "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MNCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSPj4KZW5kb2JqCjIgMCBvYmoKPDwvVHlwZS9QYWdlcy9LaWRzWzMgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNCAwIFIvUmVzb3VyY2VzIDUgMCBSPj4KZW5kb2JqCjQgMCBvYmoKPDwvTGVuZ3RoIDQ0Pj4Kc3RyZWFtCkJUCi9GMSA4IFRmCjEwIDcwMCBUZApOaXRyb2dlbiAoTik6IDQ1IG1nL2tnClBob3NwaG9ydXMgKFApOiAyOCBtZy9rZwpQb3Rhc3NpdW0gKEspOiA2NSBtZy9rZwpwSDogNi44ClRlbXBlcmF0dXJlOiAyNSBDCkh1bWlkaXR5OiA3MCUKUmFpbmZhbGw6IDE1MCBtbQpFVAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwvRm9udDw8L0YxPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvQmFzZUZvbnQvSGVsdmV0aWNhPj4+Pj4+CmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTUgMDAwMDAgbiAKMDAwMDAwMDA2MCAwMDAwMCBuIAowMDAwMDAwMTE5IDAwMDAwIG4gCjAwMDAwMDAyMTQgMDAwMDAgbiAKMDAwMDAwMDMxNyAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgNi9Sb290IDEgMCBSPj4Kc3RhcnR4cmVmCjM4OAolJUVPRgo="
+}
+
+print("Testing extraction...")
+result = extract_soil_data(test_data)
+print("\n✅ Result:")
+print(json.dumps(result, indent=2))
